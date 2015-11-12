@@ -18,12 +18,9 @@ Func time_count()
 EndFunc
 
 ;уст. флаг инициирующий проверку процессов
-Func ps_test()
-    If Not $f_ps_auto = "0" Then 
-        $f_ps_test = "1"
-    Else 
-        AdlibUnRegister ("ps_test")
-    EndIf
+Func ps_time_test() 
+    $f_ps_test = 1
+    ;FileWrite($log_fle, get_datetime() & ': +ps_time_test' & @CRLF)
 EndFunc
 
 ;текущая дата в нужном формате
@@ -87,6 +84,25 @@ Func _input_dt($arr, $inx)
     ;    Return SetError(1)
     EndIf
 EndFunc   ;==>_input_dt
+
+;тестируем процессы
+Func ps_test(ByRef $arr)
+        If $f_ps_test Then
+            For $index = 0 To Ubound($arr) - 1
+                If $arr[$index][2] < $MAXRETRY Then
+                    If Not ProcessExists($arr[$index][1]) Then
+                        FileWrite($log_fle, get_datetime() & ': Процесс <' & $arr[$index][1] & '> не обнаружен!' & @CRLF)
+                        ps_start($arr[$index][0], $arr[$index][1])
+                        $arr[$index][2] += 1
+                    EndIf 
+                ElseIf $arr[$index][2] = $MAXRETRY Then
+                    FileWrite($log_fle, get_datetime() & ': Не удалось запустить процесс <' & $arr[$index][1] & '> в течении (' & $MAXRETRY & ') попыток!' & @CRLF)
+                    $arr[$index][2] += 1
+                EndIf
+            Next
+            $f_ps_test = 0
+        EndIf
+EndFunc   ;==>ps_test
 
 ;запуск программы
 Func ps_start($path, $name)

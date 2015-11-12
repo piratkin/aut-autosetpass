@@ -37,7 +37,11 @@ EndIf
 AdlibRegister("time_count", 1000)
 
 ;уст. промежуток для проверки запущенных процессов
-AdlibRegister("ps_test", 100000)
+If $f_ps_auto = "1" Then
+    AdlibRegister("ps_time_test", $PSTESTTIME)
+EndIf
+;запускаем процессы при старте скрипта (если флаг auto=0)
+ps_test($ps_arr)
 
 While 1
     
@@ -70,15 +74,7 @@ While 1
     
     ;отслеживаем работу программ и в случае падения перезапускаем
     If $f_ps_auto = "1" Then 
-        If $f_ps_test Then
-            For $index = 0 To Ubound($ps_arr) - 1
-                If Not ProcessExists($ps_arr[$index][0] & $ps_arr[$index][1]) Then
-                    FileWrite($log_fle, get_datetime() & ': Процесс <' & $ps_arr[$index][1] & '> не обнаружен!' & @CRLF)
-                    ps_start($ps_arr[$index][0], $ps_arr[$index][1])
-                EndIf
-            Next
-            $f_ps_test = 0
-        EndIf
+        ps_test($ps_arr)
     EndIf
     
     ;Проходимся по массиву и вызываем функции

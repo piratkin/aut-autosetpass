@@ -10,10 +10,12 @@ Opt("WinWaitDelay", 0)
 Opt("WinTitleMatchMode", 2) 
 
 ;константы
-Global Const $TIMEOUT = 30          ;общий таймаут в программе
-Global Const $HOUR4   = 14400       ;4-е часа
-Global Const $PSDELAY = 1           ;задержка опроса наличия процесса программы
-Global Const $MSGWAID = 8           ;время отображения диалогового окна
+Global Const $TIMEOUT    = 30          ;общий таймаут в программе
+Global Const $HOUR4      = 14400       ;4-е часа
+Global Const $PSDELAY    = 1           ;задержка опроса наличия процесса программы
+Global Const $MSGWAID    = 8           ;время отображения диалогового окна
+Global Const $MAXRETRY   = 3           ;максимальное к-во попыток запустить процесс
+Global Const $PSTESTTIME = 300000      ;промежуток времени (мс) через который происходит перезапуск процесса
 
 ;определяем расположение рабочих файлов и создаем лог
 Global $name = StringRegExpReplace(@ScriptFullPath, '^.*\\|\.[^\.]*$', '')
@@ -23,17 +25,20 @@ Global $log_fle = FileOpen( $cfg_log, 1)
 
 ;массив для хранения данных диалоговых окон
 Global $dlg_arr[8][8] 
-Global $ps_arr[3][2]
+Global $ps_arr[3][3]
 
 ;параметры читаемые из файла конфигурации
 $ps_arr[0][0]      = IniRead($cfg_ini, "PS1", "path", "C:\Program Files\Estel IT Group\ListFolder\") 
 $ps_arr[0][1]      = IniRead($cfg_ini, "PS1", "name", "ListFolder.exe")
+$ps_arr[0][2]      = 0
 
 $ps_arr[1][0]      = IniRead($cfg_ini, "PS2", "path", "D:\Crypto Service\") 
 $ps_arr[1][1]      = IniRead($cfg_ini, "PS2", "name", "CryptoService33.exe")
+$ps_arr[1][2]      = 0
 
 $ps_arr[2][0]      = IniRead($cfg_ini, "PS3", "path", "D:\ListFolder\") 
 $ps_arr[2][1]      = IniRead($cfg_ini, "PS3", "name", "lf.exe")
+$ps_arr[2][2]      = 0
 
 ;переменные
 Global $countdown     = $HOUR4      ;счетчик времени для проведения автопроверки
