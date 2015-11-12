@@ -12,8 +12,7 @@ Func time_count()
         $countdown -= 1
     Else
         $countdown = $HOUR4
-        $f_test_old = 0
-        $f_test_new = 0
+        $f_clr_block = 1
     EndIf
 EndFunc
 
@@ -94,10 +93,12 @@ Func ps_test(ByRef $arr)
                         FileWrite($log_fle, get_datetime() & ': Процесс <' & $arr[$index][1] & '> не обнаружен!' & @CRLF)
                         ps_start($arr[$index][0], $arr[$index][1])
                         $arr[$index][2] += 1
+                        $arr[$index][3] = 1
                     EndIf 
                 ElseIf $arr[$index][2] = $MAXRETRY Then
                     FileWrite($log_fle, get_datetime() & ': Не удалось запустить процесс <' & $arr[$index][1] & '> в течении (' & $MAXRETRY & ') попыток!' & @CRLF)
                     $arr[$index][2] += 1
+                    $arr[$index][3] = 0
                 EndIf
             Next
             $f_ps_test = 0

@@ -25,25 +25,27 @@ Global $log_fle = FileOpen( $cfg_log, 1)
 
 ;массив для хранения данных диалоговых окон
 Global $dlg_arr[8][8] 
-Global $ps_arr[3][3]
+Global $ps_arr[3][4]
 
 ;параметры читаемые из файла конфигурации
 $ps_arr[0][0]      = IniRead($cfg_ini, "PS1", "path", "C:\Program Files\Estel IT Group\ListFolder\") 
 $ps_arr[0][1]      = IniRead($cfg_ini, "PS1", "name", "ListFolder.exe")
-$ps_arr[0][2]      = 0
+$ps_arr[0][2]      = 0 ;счетчик неудачных попыток запуска программы
+$ps_arr[0][3]      = 0 ;флаг корректной отработки скрипта
 
 $ps_arr[1][0]      = IniRead($cfg_ini, "PS2", "path", "D:\Crypto Service\") 
 $ps_arr[1][1]      = IniRead($cfg_ini, "PS2", "name", "CryptoService33.exe")
-$ps_arr[1][2]      = 0
+$ps_arr[1][2]      = 0 ;счетчик неудачных попыток запуска программы
+$ps_arr[1][3]      = 0 ;флаг корректной отработки скрипта
 
 $ps_arr[2][0]      = IniRead($cfg_ini, "PS3", "path", "D:\ListFolder\") 
 $ps_arr[2][1]      = IniRead($cfg_ini, "PS3", "name", "lf.exe")
-$ps_arr[2][2]      = 0
+$ps_arr[2][2]      = 0 ;счетчик неудачных попыток запуска программы
+$ps_arr[2][3]      = 0 ;флаг корректной отработки скрипта
 
 ;переменные
 Global $countdown     = $HOUR4      ;счетчик времени для проведения автопроверки
-Global $f_test_old    = 0           ;флаг запуска автопроверки
-Global $f_test_new    = 0           ;флаг запуска автопроверки
+Global $f_clr_block   = 1           ;флаг запуска автопроверки
 Global $f_ps_test     = 1           ;флаг инициирующ. тестирование процессов
 Global $f_ps_auto     = IniRead($cfg_ini, "GENERAL", "auto", "0") ;флаг автозапуска программ
 

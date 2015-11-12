@@ -46,11 +46,11 @@ ps_test($ps_arr)
 While 1
     
     ;тест-крипто
-    if Not $f_test_old Then
+    if $ps_arr[0][3] = 1 Then
         $handle = WinWait ( "Сканирование папок и криптография", "", 1)
         If $handle Then 
             If ControlClick($handle, "", "[TEXT:Тест крипто]") Then
-                $f_test_old = 1
+                $ps_arr[0][3] = 0
                 FileWrite($log_fle, get_datetime() & ': Тест крипто запущен' & @CRLF)
             Else
                 FileWrite($log_fle, get_datetime() & ': Тест крипто не удалось запустить!' & @CRLF)
@@ -59,17 +59,25 @@ While 1
     EndIf
     
     ;вкл. автоотправку
-    if Not $f_test_new Then
+    If $ps_arr[2][3] = 1 Then
         $handle = WinWait ( "Передача файла", "", 1)
         If $handle Then 
             $test = ControlCommand($handle, "", "TCheckBox1", "Check", "")
             If @error Then
                 FileWrite($log_fle, get_datetime() & ': Режим автоматической отправки включить не удалось!' & @CRLF)
             Else
-                $f_test_new = 1
+                $ps_arr[2][3] = 0
                 FileWrite($log_fle, get_datetime() & ': Режим автоматической отправки включен' & @CRLF)
             EndIf
         EndIf
+    EndIf
+    
+    If $f_clr_block = 1 Then
+        For $index = 0 To Ubound($ps_arr) - 1
+            $ps_arr[$index][2] = 0
+            $ps_arr[$index][3] = 1
+        Next
+        $f_clr_block = 0
     EndIf
     
     ;отслеживаем работу программ и в случае падения перезапускаем
