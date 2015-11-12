@@ -52,8 +52,6 @@ While 1
             If ControlClick($handle, "", "[TEXT:Тест крипто]") Then
                 $ps_arr[0][3] = 0
                 FileWrite($log_fle, get_datetime() & ': Тест крипто запущен' & @CRLF)
-            Else
-                FileWrite($log_fle, get_datetime() & ': Тест крипто не удалось запустить!' & @CRLF)
             EndIf
         EndIf
     EndIf
